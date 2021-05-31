@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Book</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+
+  <script
+          src="https://code.jquery.com/jquery-3.5.1.js"
+          integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+          crossorigin="anonymous"></script>
+  <script src="assets/js/scripts.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      // $.ajax({
+      //   type: 'Get',
+      //   dataType: 'JSON',
+      //   url: 'https://halllibrary.herokuapp.com/api/books/',
+      //   success: function (data) {
+      //     // location.reload();
+      //
+      //     i = 0;
+      //     while (i < data.length){
+      //       book = data[i];
+      //       $("#book_id_input").append("<option value='" + book.BookID + "'>" + book.Title + book.Author+"\</option>");
+      //       i = i + 1;
+      //     }
+      //   },
+      //   error: function (err) {
+      //     console.log(err);
+      //   }
+      // });
+
+          var authors = getAuthors();
+          $("#author_input").append("<option value=''>- Please select an author -</option>")
+          var i = 0;
+          while (i < authors.length){
+            author = authors[i];
+            $("#author_input").append("<option value ="+author.AuthorID+">"+ author.Lastname+ " " +author.Firstname+" </option>")
+            i = i + 1;
+          }
+
+      $("#add_book_but").click(function () {
+        title1 = $("#title_input").val();
+        numberofpages1 = $("#number_of_pages_input").val();
+        datepublished1 = $("#date_published_input").val();
+        status1 = $('input[name=status]:checked').val()
+        notes1 = $("#notes_input").val();
+        author1 = $("#author_input").val();
+
+
+    console.log({
+      Title: title1,
+      NumberOfPages: numberofpages1,
+      DatePulished: datepublished1,
+      Status: status1,
+      Notes: notes1,
+      Author: author1,
+
+
+    },)
+        $.ajax({
+          type: 'POST',
+          dataType: 'JSON',
+          url: 'https://halllibrary.herokuapp.com/api/books/',
+          data: {
+            Title: title1,
+            NumberOfPages: numberofpages1,
+            DatePulished: datepublished1,
+            Status: status1,
+            Notes: notes1,
+            Author: author1,
+
+
+          },
+          success: function (data) {
+            alert('Book added successfully');
+            alert('Add another book?');
+            location.reload();
+          },
+          error: function (err) {
+            console.log(err);
+            errors = JSON.parse(err.responseText);
+            console.log(errors);
+            $("#title_input_err").text(errors.title);
+            $("#number_of_pages_input_err").text(errors.numberOfPages);
+            $("#date_published_input_err").text(errors.datepublished);
+            $("#status_input_err").text(errors.status);
+            $("#notes_input_err").text(errors.notes);
+            $("#author_input_err").text(errors.author);
+
+
+
+          }
+        });
+      });
+    });
+  </script>
+
+
+</head>
+<body>
+<form onsubmit="return false">
+  <h2><u>Add Book</u></h2>
+  <p><label>  Title: </label><input id="title_input" type="text" maxlength="40" size="40"></p>
+  <p id = "title_input_err"></p>
+  <p><label>  Number Of Pages: </label><input id="number_of_pages_input" type="number" maxlength="30" size="30"></p>
+  <p id = "number_of_pages_input_err"></p>
+  <p><label> Date Published: </label><input id="date_published_input" type="date" required pattern="\d{4}-\d{2}-\d{2}"></p>
+  <p id = "date_published_input_err"></p>
+<!--  <p><label>  Status: </label><input id="status_input_available" value = 'available' type="radio"><label for="status_input_available">Available</label></input></p>-->
+<!--  <input id="status_input_damaged" value = 'damaged' type="radio"><label for="status_input_damaged">Damaged</label></input>-->
+  <p id = "status_input_err"></p>
+<!--  <p><label>  Notes: </label><input id="notes_input" type="text" maxlength="100" size="100"></p>-->
+<!--  <p id = "notes_input_err"></p>-->
+  <p><label>  Notes: </label><select id="notes_input">
+    <option value="Available">Available</option>
+    <option value="Damaged">Damaged</option>
+    <option value="Loaned">Loaned</option>
+  </select></p>
+  <p id = "notes_input_err"></p>
+
+
+  </p>
+
+  <p><label>  Status: </label></p>
+  <div>
+    <input type="radio" id="status_input_available" name="status" value="Available"
+           checked>
+    <label for="status_input_available">Available</label>
+  </div>
+
+  <div>
+    <input type="radio" id="status_input_damaged" name="status" value="Damaged">
+    <label for="status_input_damaged">Damaged</label>
+  </div>
+
+  <div>
+    <input type="radio" id="status_input_loaned" name="status" value="Loaned">
+    <label for="status_input_loaned">Loaned</label>
+  </div>
+
+  <p><label>  Author: </label><select id="author_input"></select></p>
+  <p id = "author_input_err"></p>
+
+
+  <button class = "button fit special" type="button" id="add_book_but">Add Book</button>
+  <a class = "button fit" href="MainMenu.html">Cancel</a>
+
+</form>
+</body>
+</html>

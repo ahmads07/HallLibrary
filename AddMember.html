@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Member</title>
+    <link rel="stylesheet" href="assets/css/main.css" />
+
+    <script
+            src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+    <script src="assets/js/scripts.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            suburbs = getSuburbs();
+            console.log(suburbs);
+            $("#suburb_input").append("<option value=''>- Please select a suburb -</option>")
+            var i = 0;
+            while (i < suburbs.length){
+                suburb = suburbs[i];
+                $("#suburb_input").append("<option value = '"+suburb.SuburbID+"'>"+ suburb.SuburbName+"</option>")
+                i = i + 1;
+            }
+
+            $("#add_member_but").click(function () {
+                lastname = $("#last_name_input").val();
+                firstname = $("#first_name_input").val();
+                dob = $("#date_of_birth_input").val();
+                street = $("#street_address_input").val();
+                suburb = $("#suburb_input").val();
+                email = $("#email_address_input").val();
+                phone = $("#phone_number_input").val();
+                type = $("#membership_type_input").val();
+
+                addMember(lastname, firstname, dob, street, suburb, email, phone, type);
+
+
+            });
+        });
+    </script>
+
+</head>
+<body>
+<form onsubmit="return false">
+    <h2><u>Add Member</u></h2>
+    <p><label>  Last Name: </label><input id="last_name_input" type="text" maxlength="25" size="25"></p>
+    <p id = "last_name_input_err"></p>
+    <p><label>  First Name: </label><input id="first_name_input" type="text" maxlength="25" size="25"></p>
+    <p id = "first_name_input_err"></p>
+    <p><label>  Date of Birth: </label><input id="date_of_birth_input" type="date" maxlength="20" size="20"></p>
+    <p id = "date_of_birth_input_err"></p>
+    <p><label> Street Address: </label><input id="street_address_input" type="text" maxlength="25" size="25"></p>
+    <p id = "street_address_input_err"></p>
+    <p><label>  Suburb: </label><select id = "suburb_input">
+
+    </select></p>
+    <p id = "suburb_input_err"></p>
+    <p><label>  Email Address: </label><input id="email_address_input" type="text" maxlength="30" size="30"></p>
+    <p id = "email_address_input_err"></p>
+    <p><label>  Phone Number: </label><input id="phone_number_input" type="text" maxlength="16" size="16"></p>
+    <p id = "phone_number_input_err"></p>
+    <p><label>  Membership Type: </label><select id="membership_type_input">
+        <option value="Adult">Adult</option>
+        <option value="Child">Child</option>
+    </select></p>
+    <p id = "membership_type_input_err"></p>
+
+
+    </p>
+
+    <button class = "button fit special" type="button" id="add_member_but">Add Member</button>
+    <a class = "button fit" href="MainMenu.html">Cancel</a>
+</form>
+</body>
+</html>
