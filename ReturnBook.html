@@ -15,8 +15,6 @@
     <script>
 
 
-
-
         $(document).ready(function () {
             $.ajax({
                 type: 'Get',
@@ -59,7 +57,7 @@
                             var book = getBookbyID(memberLoan[i].Book);
                             loanDate = new Date(memberLoan[i].LoadDate)
 
-                            $("#book").append("<option value= "+loanid +">" + "BookID :" + book.BookID + " Book Title :" + book.Title + "</option>");
+                            $("#book").append("<option value= " + loanid + ">" + "BookID :" + book.BookID + " Book Title :" + book.Title + "</option>");
 
                             i = i + 1;
                         }
@@ -73,13 +71,13 @@
                         console.log(memberLoan);
                         console.log(val);
                         var loanValue = memberLoan.find(function (loan) {
-                           return loan.loanID === Number(val);
+                            return loan.loanID === Number(val);
                         })
                         console.log(loanValue)
                         $("#loan_date").text(loanValue.LoadDate);
-                    //     if(new Date(loanValue.LoadDate).addDays(21) < new Date()){
-                    //         console.log("addFine")
-                    // }
+                        //     if(new Date(loanValue.LoadDate).addDays(21) < new Date()){
+                        //         console.log("addFine")
+                        // }
                         fine = calculateFine(loanValue.LoadDate);
                         $("#fine_due").text("$" + fine)
                         // alert(fine);
@@ -91,7 +89,7 @@
                 }
             });
 
-            $("#return_book_but").click(function (){
+            $("#return_book_but").click(function () {
                 var loan_id = $("#book").val();
                 returnBook(loan_id);
             });
@@ -99,48 +97,53 @@
     </script>
 </head>
 <body>
-<form onsubmit="return false">
-    <h2><u>Return Book</u></h2>
-    <p><label> Member: </label>
-        <select id="member_id_input">
-            <option value="">Select one</option>
-        </select>
-    </p>
-    <table>
-        <tr>
-            <td>Last Name:</td>
-            <td><input id="member_lastname" maxlength="25" size="25" type="text"></td>
-        </tr>
-        <tr>
-            <td>First Name:</td>
-            <td><input id="member_firstname" maxlength="25" size="25" type="text"></td>
-        <tr>
-        <tr>
-            <td>Street Address:</td>
-            <td><input id="member_street_address" maxlength="30" size="30" type="text"></td>
-        </tr>
+<div class="inner">
+    <div class="box">
+        <div class="content">
+            <form onsubmit="return false">
+                <h2><u>Return Book</u></h2>
+                <p><label> Member: </label>
+                    <select id="member_id_input">
+                        <option value="">Select one</option>
+                    </select>
+                </p>
+                <table>
+                    <tr>
+                        <td>Last Name:</td>
+                        <td><input id="member_lastname" maxlength="25" size="25" type="text"></td>
+                    </tr>
+                    <tr>
+                        <td>First Name:</td>
+                        <td><input id="member_firstname" maxlength="25" size="25" type="text"></td>
+                    <tr>
+                    <tr>
+                        <td>Street Address:</td>
+                        <td><input id="member_street_address" maxlength="30" size="30" type="text"></td>
+                    </tr>
 
-        </select></td></tr>
-    </table>
+                    </select></td></tr>
+                </table>
 
-    <select id="book">
-        <option><b>Loaned Books</b></option>
-    </select>
+                <select id="book">
+                    <option><b>Loaned Books</b></option>
+                </select>
 
-    <br></br>
-    <div>
-        <span><b>Loan Date: </b></span>
-        <span id = "loan_date"></span>
-        <p><span><b>Fine Due: </b></span>
-            <span id = "fine_due"></span></p>
+                <br></br>
+                <div>
+                    <span><b>Loan Date: </b></span>
+                    <span id="loan_date"></span>
+                    <p><span><b>Fine Due: </b></span>
+                        <span id="fine_due"></span></p>
+                </div>
+                <br></br>
+
+
+                <button class="button fit special" id="return_book_but" type="button">Return Book</button>
+                <a class="button fit" href="index.html">Cancel</a>
+            </form>
+        </div>
     </div>
-    <br></br>
-
-
-
-    <button class="button fit special" id="return_book_but" type="button">Return Book</button>
-    <a class="button fit" href="index.html">Cancel</a>
-</form>
+</div>
 </body>
 </html>
 
