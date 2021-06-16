@@ -211,7 +211,6 @@ function getMemberInfo (member_id) {
             // location.reload();
             // console.log(arr)
             // var data = arr[0]
-            console.log(data)
             $("#member_lastname").val(data.Lastname);
             $("#member_firstname").val(data.Firstname);
             $("#member_dateOfBirth").val(data.DateOfBirth);
@@ -229,3 +228,91 @@ function getMemberInfo (member_id) {
     });
 }
 
+function join(t, a, s) {
+    function format(m) {
+        let f = new Intl.DateTimeFormat('en', m);
+        return f.format(t);
+    }
+    return a.map(format).join(s);
+}
+
+function addLoan(bookid, memberid, loanDate){
+    let f = [{year: 'numeric'}, {month: 'numeric'}, {day: 'numeric'} ];
+    $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: 'https://halllibrary.herokuapp.com/api/loans/',
+        data: {
+            Book: bookid,
+            LoadDate: loanDate,
+            Member:memberid,
+        },
+        success: function (data) {
+            alert('Book loaned successfully');
+            alert('Loan another book?');
+            location.reload();
+
+        },
+        error: function (err) {
+            console.log(err);
+            errors = JSON.parse(err.responseText);
+            console.log(errors);
+            $("#book_id_input_err").text(errors.book_id);
+            $("#title_input_err").text(errors.title);
+            $("#author_input_err").text(errors.author);
+
+        }
+
+    });
+}
+
+function returnBook(loanid){
+    $.ajax({
+        type: 'Delete',
+        dataType: 'JSON',
+        url: 'https://halllibrary.herokuapp.com/api/loans/'+loanid,
+        success: function (data) {
+            alert('Book returned successfully');
+            alert('Return another book?');
+            location.reload();
+
+        },
+        error: function (err) {
+            console.log(err);
+
+        }
+
+    });
+}
+
+function calculateFine(bookedDay){
+    var y = bookedDay.split("-")[0];
+    var m = bookedDay.split("-")[1];
+    var d = bookedDay.split("-")[2];
+    var today = new Date();
+    // console.log(today);
+    var fine = 0;
+    var bookedDate = new Date(y, m-1, d);
+    console.log(bookedDate);
+    var diffMS = today - bookedDate;
+    console.log(diffMS + ' ms');
+
+    var diffS = diffMS / 1000;
+    console.log(diffS + ' ');
+
+    var diffM = diffS / 60;
+    console.log(diffM + ' minutes');
+
+    var diffH = diffM / 60;
+    console.log(diffH + ' hours');
+
+    var diffD = diffH / 24;
+    console.log(diffD + ' days');
+    diffD = Math.floor(diffD);
+    var daysofDue = diffD - 21;
+    if (daysofDue > 0){
+        fine = 0.5 * daysofDue;
+    }
+
+    return fine.toFixed(2);
+}

@@ -13,54 +13,86 @@
     <script src="assets/js/scripts.js"></script>
 
     <script>
-        $.ajax({
-            type: 'Get',
-            dataType: 'JSON',
-            url: 'https://halllibrary.herokuapp.com/api/members',
-            success: function (data) {
-                // location.reload();
-                console.log(data)
-                i = 0;
-                while (i < data.length) {
-                    member = data[i];
-                    $("#member_id_input").append("<option value='" + member.MemberID + "'>" + member.Lastname + " " + member.Firstname, +member.StreetAddress, "\</option>");
-                    i = i + 1;
-                }
 
-                $("#member_id_input").change(function () {
-                    member = getMemberInfo(($("#member_id_input").val()));
-                });
-
-                $("#member_id_input").change(function () {
-                    console.log("Hello")
-                    var memberID = Number($("#member_id_input").val())
-                    member = getMemberInfo(memberID);
-                    var loans = getLoans();
-                    var allBooks = getBooks()
-                    var memberLoan = loans.filter(function (loan) {
-                        return loan.Member === memberID
-                    })
-
-                    var i = 0;
-                    while (i < memberLoan.length) {
-
-                        var book = getBookbyID(memberLoan[i].Book);
-
-                        $("#book").append("<option value= book.BookID>" + "BookID :" + book.BookID + " Book Title :" + book.Title + "</option>");
-
-                        i = i + 1;
-                    }
-                });
-            },
-            error: function (err) {
-                console.log(err);
-            }
-        });
 
 
 
         $(document).ready(function () {
+            $.ajax({
+                type: 'Get',
+                dataType: 'JSON',
+                url: 'https://halllibrary.herokuapp.com/api/members',
+                success: function (data) {
+                    // location.reload();
+                    console.log(data)
+                    i = 0;
+                    while (i < data.length) {
+                        member = data[i];
+                        $("#member_id_input").append("<option value='" + member.MemberID + "'>" + member.Lastname + " " + member.Firstname, +member.StreetAddress, "\</option>");
+                        i = i + 1;
+                    }
 
+                    $("#member_id_input").change(function () {
+                        member = getMemberInfo(($("#member_id_input").val()));
+                    });
+
+                    var loanDate
+                    var memberLoan
+                    $("#member_id_input").change(function () {
+                        $("#loan_date").text("")
+                        $("#fine_due").text("")
+
+                        var memberID = Number($("#member_id_input").val())
+                        member = getMemberInfo(memberID);
+                        var loans = getLoans();
+                        // var allBooks = getBooks()
+                        memberLoan = loans.filter(function (loan) {
+                            return loan.Member === memberID
+                        })
+
+                        var i = 0;
+                        console.log(memberLoan)
+                        // $("#book").children().remove().append();
+                        $("#book").find("option:not(:first)").remove()
+                        while (i < memberLoan.length) {
+                            var loanid = memberLoan[i].loanID;
+                            var book = getBookbyID(memberLoan[i].Book);
+                            loanDate = new Date(memberLoan[i].LoadDate)
+
+                            $("#book").append("<option value= "+book.BookID +">" + "BookID :" + book.BookID + " Book Title :" + book.Title + "</option>");
+
+                            i = i + 1;
+                        }
+
+
+                    });
+
+                    $("#book").change(function () {
+                        var val = Number (this.value)
+                        var loanValue = memberLoan.find(function (loan) {
+                            console.log(loan,val)
+                           return loan.Book === val
+                        })
+                        console.log(loanValue.LoadDate)
+                        $("#loan_date").text(loanValue.LoadDate);
+                    //     if(new Date(loanValue.LoadDate).addDays(21) < new Date()){
+                    //         console.log("addFine")
+                    // }
+                        fine = calculateFine(loanValue.LoadDate);
+                        $("#fine_due").text("$" + fine)
+                        // alert(fine);
+                    });
+
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+
+            $("#return_book_but").click(function (){
+                var loan_id = $("#book").val();
+                returnBook(loan_id);
+            });
         });
     </script>
 </head>
@@ -93,7 +125,17 @@
         <option><b>Loaned Books</b></option>
     </select>
 
-    </p>
+    <br></br>
+    <div>
+        <span><b>Loan Date: </b></span>
+        <span id = "loan_date"></span>
+        <p><span><b>Fine Due: </b></span>
+            <span id = "fine_due"></span></p>
+    </div>
+    <br></br>
+
+
+
     <button class="button fit special" id="return_book_but" type="button">Return Book</button>
     <a class="button fit" href="MainMenu.html">Cancel</a>
 </form>

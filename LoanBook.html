@@ -12,99 +12,126 @@
     <script src="assets/js/scripts.js"></script>
 
     <script>
-        $.ajax({
-            type: 'Get',
-            dataType: 'JSON',
-            url: 'https://halllibrary.herokuapp.com/api/members',
-            success: function (data) {
-                // location.reload();
-                console.log(data)
-                i = 0;
-                while (i < data.length) {
-                    member = data[i];
-                    $("#member_id_input").append("<option value='" + member.MemberID + "'>" + member.Lastname + " " + member.Firstname+"</option>");
-                    i = i + 1;
-                }
-
-                $("#member_id_input").change(function(){
-                    var memberID = Number ($("#member_id_input").val())
-                    member = getMemberInfo(memberID);
-                    var loans = getLoans();
-                    var allBooks = getBooks()
-                    var memberLoan = loans.filter(function (loan) {
-                        return loan.Member === memberID
-                    })
-
-                    var i = 0;
-                    while (i<memberLoan.length) {
-
-                        var book = getBookbyID(memberLoan[i].Book);
-
-                        $("#member>li").append("<p>"+ "BookID :" + book.BookID + " Book Title :" + book.Title + "</p>");
-
+        $(document).ready(function (){
+            $.ajax({
+                type: 'Get',
+                dataType: 'JSON',
+                url: 'https://halllibrary.herokuapp.com/api/members',
+                success: function (data) {
+                    // location.reload();
+                    console.log(data)
+                    i = 0;
+                    while (i < data.length) {
+                        member = data[i];
+                        $("#member_id_input").append("<option value='" + member.MemberID + "'>" + member.Lastname + " " + member.Firstname+"</option>");
                         i = i + 1;
                     }
 
-                    // var j = 0;
-                    // while (j<allBooks.length) {
-                    //     var availableBooks = allBooks.forEach(function (eachBook) {
-                    //             if(eachBook.BookID !== book.BookID)  {
-                    //                 $("#available_books_input").append("<option value='" + eachBook.BookID + "'>" + eachBook.Title +"</option>");
-                    //
-                    //             }
-                    //             // console.log(book, eachBook)
-                    //             // return eachBook.BookID !== book.BookID
-                    //         },
-                    //     )
-                    //     j = j + 1;
-                    // }
-                    var availableBooks = allBooks.filter(function (book) {
-                        return memberLoan.some(function (loan) {
-                            console.log(memberLoan, book.BookID,loan.Book,book.BookID !== loan.Book)
-                            return book.BookID !== loan.Book
+                    $("#member_id_input").change(function(){
+                        var memberID = Number ($("#member_id_input").val())
+                        member = getMemberInfo(memberID);
+                        var loans = getLoans();
+                        var allBooks = getBooks()
+                        var memberLoan = loans.filter(function (loan) {
+                            return loan.Member === memberID
                         })
-                    })
-                    console.log(availableBooks)
-                });
 
-            },
-            error: function (err) {
-                console.log(err);
-            }
+                        var i = 0;
+                        var booksBelongToThisMember = [];
+                        while (i<memberLoan.length) {
+
+                            var book = getBookbyID(memberLoan[i].Book);
+
+                            $("#member>li").append("<p>"+ "BookID :" + book.BookID + " Book Title :" + book.Title + "</p>");
+
+                            booksBelongToThisMember.push(book.BookID);
+                            i = i + 1;
+                        }
+
+                        var j = 0;
+
+                        console.log(memberLoan);
+                        while (j<allBooks.length) {
+                            var availableBooks = allBooks.forEach(function (eachBook) {
+                                    if(booksBelongToThisMember.includes(eachBook.BookID) === false )  {
+                                        $("#available_books_input").append("<option value='" + eachBook.BookID + "'>" + eachBook.Title +"</option>");
+
+                                    }
+                                    // console.log(book, eachBook)
+                                    // return eachBook.BookID !== book.BookID
+                                },
+                            )
+                            j = j + 1;
+                        }
+                        var availableBooks = allBooks.filter(function (book) {
+                            return memberLoan.some(function (loan) {
+                                console.log(memberLoan, book.BookID,loan.Book,book.BookID !== loan.Book)
+                                return book.BookID !== loan.Book
+                            })
+                        })
+                        console.log(availableBooks)
+                    });
+
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+
+            $("#loan_book_but").click(function (){
+                memberid=$("#member_id_input").val();
+                bookid=$("#available_books_input").val();
+                loanDate=$("#loan_date_input").val();
+                console.log(loanDate);
+                addLoan(bookid, memberid, loanDate);
+
+            });
         });
+
 
     </script>
 </head>
 <body>
-<form onsubmit ="return false">
-    <h2><u>Loan Book</u></h2>
-    <p><label> Member: </label>
-        <select id="member_id_input">
-            <option value = "">Select one</option>
-        </select>
-    </p>
-    <table>
-        <tr> <td>Last Name:</td> <td ><input id = "member_lastname" type = "text" maxlength="25" size="25"></td></tr>
-        <tr> <td>First Name:</td> <td ><input id = "member_firstname" type = "text" maxlength="25"size="25"></td><tr>
-        <tr> <td>Street Address:</td> <td ><input id = "member_street_address" type = "text" maxlength="30" size="30"></td></tr>
+<div class = "inner">
+    <div class = "box">
+        <div class = "content">
+            <form class = "inner" onsubmit ="return false">
+                <h2><u>Loan Book</u></h2>
+                <p><label> Member: </label>
+                    <select id="member_id_input">
+                        <option value = "">Select one</option>
+                    </select>
+                </p>
+                <table>
+                    <tr> <td>Last Name:</td> <td ><input id = "member_lastname" type = "text" maxlength="25" size="25"></td></tr>
+                    <tr> <td>First Name:</td> <td ><input id = "member_firstname" type = "text" maxlength="25"size="25"></td><tr>
+                    <tr> <td>Street Address:</td> <td ><input id = "member_street_address" type = "text" maxlength="30" size="30"></td></tr>
 
 
-        </select></td></tr>
-    </table>
-    </p>
+                    </select></td></tr>
+                </table>
+                </p>
 
-    <ul id="member">
-        <li><b>Loaned Books</b></li>
-    </ul>
+                <ul id="member">
+                    <li><b>Loaned Books</b></li>
+                </ul>
 
-    <p><label> Available Books: </label>
-    <select id="available_books_input">
-        <option value = "">Select one</option>
-    </select>
+                <p><label> Loan date: </label>
+                    <input required type = date id="loan_date_input">
+                    </input>
 
-    <button class = "button fit special" type="button" id="loan_book_but">Loan Book</button>
-    <a class = "button fit" href="MainMenu.html">Cancel</a>
-</form>
+
+                <p><label> Available Books: </label>
+                    <select id="available_books_input">
+                        <option value = "">Select one</option>
+                    </select>
+
+                    <button class = "button fit special" type="button" id="loan_book_but">Loan Book</button>
+                    <a class = "button fit" href="MainMenu.html">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
