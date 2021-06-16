@@ -68,12 +68,14 @@
                     });
 
                     $("#book").change(function () {
-                        var val = Number (this.value)
+                        var val = this.value;
+                        console.log("we check here now");
+                        console.log(memberLoan);
+                        console.log(val);
                         var loanValue = memberLoan.find(function (loan) {
-                            console.log(loan,val)
-                           return loan.Book === val
+                           return loan.loanID === Number(val);
                         })
-                        console.log(loanValue.LoadDate)
+                        console.log(loanValue)
                         $("#loan_date").text(loanValue.LoadDate);
                     //     if(new Date(loanValue.LoadDate).addDays(21) < new Date()){
                     //         console.log("addFine")
