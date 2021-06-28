@@ -41,14 +41,16 @@ function addMember(lastname, firstname, dob, street, suburb, email, phone, membe
             console.log(err);
             errors = JSON.parse(err.responseText);
             console.log(errors);
-            $("#last_name_input_err").text(errors.lastname);
-            $("#first_name_input_err").text(errors.firstname);
-            $("#date_of_birth_input_err").text(errors.date);
-            $("#street_address_input_err").text(errors.street);
-            $("#suburb_input_err").text(errors.suburb);
-            $("#email_address_input_err").text(errors.email);
-            $("#phone_number_input_err").text(errors.phone);
-            $("#membership_type_input_err").text(errors.member);
+            $("#last_name_input_err").text(errors.Lastname);
+            $("#first_name_input_err").text(errors.Firstname);
+            $("#date_of_birth_input_err").text(errors.DateOfBirth);
+            $("#street_address_input_err").text(errors.StreetAddress);
+            $("#suburb_input_err").text(errors.Suburb);
+            $("#email_address_input_err").text(errors.EmailAddress);
+            $("#phone_number_input_err").text(errors.PhoneNumber);
+            $("#membership_type_input_err").text(errors.MembershipType);
+
+            alert("Missing fields, Please fill in all the required fields");
 
 
 
@@ -84,7 +86,7 @@ function updateMemberInfo (member_id) {
     email1 = $("#member_email_address").val();
     phone1 = $("#member_phone_number").val();
     fine1 = $("member_fines_due").val();
-    member1 = $("#member_membership_type").val();
+    member1 = $("#membership_type_input").val();
     console.log({lastname1, firstname1, dob1, street1, suburb1, email1, phone1, fine1, member1, member_id})
 
     $.ajax({
@@ -110,6 +112,7 @@ function updateMemberInfo (member_id) {
         },
         error: function (err) {
             console.log(err);
+            alert("Missing field(s): " + Object.keys(err.responseJSON).join(", "))
         }
     });
 }
@@ -236,7 +239,7 @@ function join(t, a, s) {
     return a.map(format).join(s);
 }
 
-function addLoan(bookid, memberid, loanDate){
+function addLoan(bookid, memberid, loanDate, fetch){
     let f = [{year: 'numeric'}, {month: 'numeric'}, {day: 'numeric'} ];
     $.ajax({
         type: 'POST',
@@ -249,8 +252,12 @@ function addLoan(bookid, memberid, loanDate){
         },
         success: function (data) {
             alert('Book loaned successfully');
-            alert('Loan another book?');
-            location.reload();
+            if (confirm('Loan another book?')){
+                return fetch()
+            } else {
+                location.reload();
+            }
+            // location.reload();
 
         },
         error: function (err) {

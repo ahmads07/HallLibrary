@@ -13,6 +13,51 @@
 
     <script>
         $(document).ready(function (){
+            var fetch = function(){
+                $("#member>li>p").remove()
+                var memberID = Number ($("#member_id_input").val())
+                member = getMemberInfo(memberID);
+                var loans = getLoans();
+                var allBooks = getBooks()
+                var memberLoan = loans.filter(function (loan) {
+                    return loan.Member === memberID
+                })
+
+                var i = 0;
+                var booksBelongToThisMember = [];
+                while (i<memberLoan.length) {
+
+                    var book = getBookbyID(memberLoan[i].Book);
+
+                    $("#member>li").append("<p>"+ "BookID :" + book.BookID + " Book Title :" + book.Title + "</p>");
+
+                    booksBelongToThisMember.push(book.BookID);
+                    i = i + 1;
+                }
+
+                var j = 0;
+                $("#book").find("option:not(:first)").remove()
+
+                while (j<allBooks.length) {
+                    var availableBooks = allBooks.forEach(function (eachBook) {
+                            if(booksBelongToThisMember.includes(eachBook.BookID) === false )  {
+                                $("#available_books_input").append("<option value='" + eachBook.BookID + "'>" + eachBook.Title +"</option>");
+
+                            }
+                            // console.log(book, eachBook)
+                            // return eachBook.BookID !== book.BookID
+                        },
+                    )
+                    j = j + 1;
+                }
+                var availableBooks = allBooks.filter(function (book) {
+                    return memberLoan.some(function (loan) {
+                        // console.log(memberLoan, book.BookID,loan.Book,book.BookID !== loan.Book)
+                        return book.BookID !== loan.Book
+                    })
+                })
+            }
+
             $.ajax({
                 type: 'Get',
                 dataType: 'JSON',
@@ -27,50 +72,7 @@
                         i = i + 1;
                     }
 
-                    $("#member_id_input").change(function(){
-                        var memberID = Number ($("#member_id_input").val())
-                        member = getMemberInfo(memberID);
-                        var loans = getLoans();
-                        var allBooks = getBooks()
-                        var memberLoan = loans.filter(function (loan) {
-                            return loan.Member === memberID
-                        })
-
-                        var i = 0;
-                        var booksBelongToThisMember = [];
-                        while (i<memberLoan.length) {
-
-                            var book = getBookbyID(memberLoan[i].Book);
-
-                            $("#member>li").append("<p>"+ "BookID :" + book.BookID + " Book Title :" + book.Title + "</p>");
-
-                            booksBelongToThisMember.push(book.BookID);
-                            i = i + 1;
-                        }
-
-                        var j = 0;
-
-                        console.log(memberLoan);
-                        while (j<allBooks.length) {
-                            var availableBooks = allBooks.forEach(function (eachBook) {
-                                    if(booksBelongToThisMember.includes(eachBook.BookID) === false )  {
-                                        $("#available_books_input").append("<option value='" + eachBook.BookID + "'>" + eachBook.Title +"</option>");
-
-                                    }
-                                    // console.log(book, eachBook)
-                                    // return eachBook.BookID !== book.BookID
-                                },
-                            )
-                            j = j + 1;
-                        }
-                        var availableBooks = allBooks.filter(function (book) {
-                            return memberLoan.some(function (loan) {
-                                console.log(memberLoan, book.BookID,loan.Book,book.BookID !== loan.Book)
-                                return book.BookID !== loan.Book
-                            })
-                        })
-                        console.log(availableBooks)
-                    });
+                    $("#member_id_input").change(fetch);
 
                 },
                 error: function (err) {
@@ -82,8 +84,10 @@
                 memberid=$("#member_id_input").val();
                 bookid=$("#available_books_input").val();
                 loanDate=$("#loan_date_input").val();
-                console.log(loanDate);
-                addLoan(bookid, memberid, loanDate);
+
+             addLoan(bookid, memberid, loanDate, fetch);
+
+
 
             });
         });

@@ -32,13 +32,22 @@
                 email = $("#email_address_input").val();
                 phone = $("#phone_number_input").val();
                 type = $("#membership_type_input").val();
+                // if (lastname && firstname && dob && street && suburb && email && phone && type){
+                //     addMember(lastname, firstname, dob, street, suburb, email, phone, type);
+                // } else {
+                //     alert("Missing fields, please complete the whole form, \nHint: Google how to fill a form!!");
+                // }
 
                 addMember(lastname, firstname, dob, street, suburb, email, phone, type);
-
 
             });
         });
     </script>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
 
 </head>
 <body>
@@ -47,31 +56,47 @@
         <div class="content">
             <form onsubmit="return false">
                 <h2><u>Add Member</u></h2>
-                <p><label> Last Name: </label><input id="last_name_input" maxlength="25" size="25" type="text"></p>
-                <p id="last_name_input_err"></p>
-                <p><label> First Name: </label><input id="first_name_input" maxlength="25" size="25" type="text"></p>
-                <p id="first_name_input_err"></p>
-                <p><label> Date of Birth: </label><input id="date_of_birth_input" maxlength="20" size="20" type="date">
-                </p>
-                <p id="date_of_birth_input_err"></p>
-                <p><label> Street Address: </label><input id="street_address_input" maxlength="25" size="25"
-                                                          type="text"></p>
-                <p id="street_address_input_err"></p>
-                <p><label> Suburb: </label><select id="suburb_input">
+                <p><label> Last Name: </label>
+                    <span class="error" id="last_name_input_err"></span>
+                    <input id="last_name_input" maxlength="25" required size="25" type="text"></p>
 
-                </select></p>
-                <p id="suburb_input_err"></p>
-                <p><label> Email Address: </label><input id="email_address_input" maxlength="30" size="30" type="text">
+                <p><label> First Name: </label>
+                    <span class="error" id="first_name_input_err"></span>
+                    <input id="first_name_input" maxlength="25" required size="25" type="text">
                 </p>
-                <p id="email_address_input_err"></p>
-                <p><label> Phone Number: </label><input id="phone_number_input" maxlength="16" size="16" type="text">
+
+                <p><label> Date of Birth: </label>
+                    <span class="error" id="date_of_birth_input_err"></span>
+                    <input id="date_of_birth_input" maxlength="20" size="20" type="date">
                 </p>
-                <p id="phone_number_input_err"></p>
-                <p><label> Membership Type: </label><select id="membership_type_input">
+
+                <p><label> Street Address: </label>
+                <span class="error" id="street_address_input_err"></span>
+                    <input id="street_address_input" maxlength="25" size="25" type="text"></p>
+
+                <p>
+                    <label> Suburb: </label>
+                <span class="error" id="suburb_input_err"></span>
+                <select id="suburb_input"></select>
+                </p>
+
+                <p><label> Email Address: </label>
+                <span class="error" id="email_address_input_err"></span>
+                <input id="email_address_input" maxlength="30" size="30" type="text">
+                </p>
+
+                <p><label> Phone Number: </label>
+                <span class="error" id="phone_number_input_err"></span>
+                <input id="phone_number_input" maxlength="16" size="16" type="text">
+                </p>
+
+                <p><label> Membership Type: </label>
+                <span class="error" id="membership_type_input_err"></span>
+                <select id="membership_type_input">
                     <option value="Adult">Adult</option>
                     <option value="Child">Child</option>
                 </select></p>
-                <p id="membership_type_input_err"></p>
+
 
 
                 </p>
