@@ -107,7 +107,7 @@ function updateMemberInfo (member_id) {
         },
         success: function (data) {
             alert("Member updated successfully")
-            alert("Add another Member?")
+            alert("Update another Member?")
             location.reload();
         },
         error: function (err) {

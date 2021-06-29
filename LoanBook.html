@@ -37,7 +37,7 @@
 
                 var j = 0;
                 $("#book").find("option:not(:first)").remove()
-
+                $("#available_books_input").empty();
                 while (j<allBooks.length) {
                     var availableBooks = allBooks.forEach(function (eachBook) {
                             if(booksBelongToThisMember.includes(eachBook.BookID) === false )  {
