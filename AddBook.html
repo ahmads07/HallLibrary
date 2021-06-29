@@ -84,7 +84,7 @@
             alert("Missing field(s): " + Object.keys(err.responseJSON).join(", "))
             errors = JSON.parse(err.responseText);
             console.log(errors);
-            $("#title_input_err").text(errors.title);
+            $("#title_input_err").text(errors.Title);
             $("#number_of_pages_input_err").text(errors.NumberOfPages);
             $("#date_published_input_err").text(errors.DatePulished);
             $("#status_input_err").text(errors.status);
@@ -107,23 +107,29 @@
     <div class = "content">
 <form onsubmit="return false">
   <h2><u>Add Book</u></h2>
-  <p><label>  Title: </label><input id="title_input" type="text" maxlength="40" size="40"></p>
-  <p id = "title_input_err"></p>
-  <p><label>  Number Of Pages: </label><input id="number_of_pages_input" type="number" maxlength="30" size="30"></p>
-  <p id = "number_of_pages_input_err"></p>
-  <p><label> Date Published: </label><input id="date_published_input" type="date" required pattern="\d{4}-\d{2}-\d{2}"></p>
-  <p id = "date_published_input_err"></p>
+  <p><label>  Title: </label><span class = "error" id = "title_input_err"></span>
+  <input id="title_input" type="text" maxlength="40" size="40"></p>
+
+  <p><label>  Number Of Pages: </label>
+    <span class = "error" id = "number_of_pages_input_err"></span>
+    <input id="number_of_pages_input" type="number" maxlength="30" size="30"></p>
+
+  <p><label> Date Published: </label>
+    <span class = "error" id = "date_published_input_err"></span>
+    <input id="date_published_input" type="date" required pattern="\d{4}-\d{2}-\d{2}"></p>
+
 <!--  <p><label>  Status: </label><input id="status_input_available" value = 'available' type="radio"><label for="status_input_available">Available</label></input></p>-->
 <!--  <input id="status_input_damaged" value = 'damaged' type="radio"><label for="status_input_damaged">Damaged</label></input>-->
   <p id = "status_input_err"></p>
 <!--  <p><label>  Notes: </label><input id="notes_input" type="text" maxlength="100" size="100"></p>-->
 <!--  <p id = "notes_input_err"></p>-->
-  <p><label>  Notes: </label><select id="notes_input">
+  <p><label>  Notes: </label>
+    <span class = "error" id = "notes_input_err"></span>
+    <select id="notes_input">
     <option value="Available">Available</option>
     <option value="Damaged">Damaged</option>
     <option value="Loaned">Loaned</option>
   </select></p>
-  <p id = "notes_input_err"></p>
 
 
   </p>
@@ -145,8 +151,9 @@
     <label for="status_input_loaned">Loaned</label>
   </div>
 
-  <p><label>  Author: </label><select id="author_input"></select></p>
-  <p id = "author_input_err"></p>
+  <p><label>  Author: </label>
+    <span class = "error" id = "author_input_err"></span>
+    <select id="author_input"></select></p>
 
 
   <button class = "button fit special" type="button" id="add_book_but">Add Book</button>

@@ -112,7 +112,8 @@ function updateMemberInfo (member_id) {
         },
         error: function (err) {
             console.log(err);
-            alert("Missing field(s): " + Object.keys(err.responseJSON).join(", "))
+            alert("Something went wrong: Missing field(s)")
+            alert("Missing field(s): " + Object.keys(err?.responseJSON).join(", "))
         }
     });
 }
